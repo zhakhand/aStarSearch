@@ -61,16 +61,14 @@ def calculate_path_heuristic(graph_data, mode):
     g_val[start] = 0
     f_val = {node: float('inf') for node in graph}
     f_val[start] = heuristics[f'city_{start}']
-    expanded = 0
     visited = set()
 
     while open_set:
         current_node, current_f = min(open_set.items(), key=lambda x: x[1])
         del open_set[current_node]
 
-        expanded += 1
         if current_node == end:
-            return reconstruct_path(came_from, start, end), g_val[end], expanded, heuristics
+            return reconstruct_path(came_from, start, end), g_val[end], len(visited), heuristics
 
         visited.add(current_node)
 
@@ -102,26 +100,27 @@ def calculate_path_no_heuristic(graph_data):
     came_from = {}
     g_val = {node: float('inf') for node in graph}
     g_val[start] = 0
-    expanded = 0
     heuristics = {'city_' + city: 0 for city in graph}
-    visited = {}
+    visited = set()
 
     while open_set:
         open_set.sort(key=lambda x: x[0])
         current_f, current = open_set.pop(0)
-        expanded += 1
+        
+        if current in visited:
+            continue
 
         if current == end:
-            return reconstruct_path(came_from, start, end), g_val[end], expanded, heuristics
+            return reconstruct_path(came_from, start, end), g_val[end], len(visited), heuristics
+        
+        visited.add(current)
 
         for neighbor, cost in graph[current].items():
             new_g_val = g_val[current] + cost
             if new_g_val < g_val[neighbor]:
                 came_from[neighbor] = current
                 g_val[neighbor] = new_g_val
-                if neighbor not in visited:
-                    open_set.append((g_val[neighbor], neighbor))
-                    visited[neighbor] = g_val[neighbor]
+                open_set.append((g_val[neighbor], neighbor))
 
     raise ValueError("Graph is unsolvable: No path!")
 
