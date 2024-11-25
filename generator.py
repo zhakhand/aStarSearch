@@ -4,12 +4,12 @@ import yaml
 
 FILE_NAME = 'large_problem.yaml'
 
-N_CITIES = 1000
+N_CITIES = 10_000
 MIN_CONNECTIONS = 5
 MAX_CONNECTIONS = min(int(np.log(N_CITIES)*5),N_CITIES)
-X_SIZE = 1_000
-Y_SIZE = 1_000
-Z_SIZE = 1_000
+X_SIZE = 10_000
+Y_SIZE = 10_000
+Z_SIZE = 10_000
 IS_SOLVABLE = True
 
 def generate_large_prism_problem(
